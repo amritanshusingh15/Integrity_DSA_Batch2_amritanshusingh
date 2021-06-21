@@ -32,19 +32,19 @@ Ans -: STL is a set of C++ template classes to provide general-purpose classes a
 
 Different STL containers are-:
 
-Set
-Map
-multimap
-unordered_set
-unordered_map
-unordered_multiset
-unordered_multimap
-stack
-queue
-priority_queue
-vector
-dequeue
-list
+Set, 
+Map, 
+multimap, 
+unordered_set, 
+unordered_map, 
+unordered_multiset, 
+unordered_multimap, 
+stack, 
+queue, 
+priority_queue, 
+vector, 
+dequeue, 
+list, 
 
 
 
