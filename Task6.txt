@@ -1,0 +1,358 @@
+// Detect cycle in linklist
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        unordered_map<ListNode *,int>m;
+        while(head!=NULL){
+            if(m[head]>1){
+                return true;
+            }
+            m[head]++;
+            head=head->next;
+        }
+        return false;
+    }
+};
+
+// return start of the cycle
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *temp=head;
+        unordered_map<ListNode *,int>m;
+        while(temp!=NULL){
+            if(m.find(temp)!=m.end()){
+                return temp;
+                break;
+            }else{
+                m[temp]++;
+            }
+            temp=temp->next;
+        }
+        return NULL;
+    }
+};
+
+// Radix sort
+
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int getmax(int arr[],int n){
+    int max=arr[0];
+    for(int i=1;i<n;i++){
+        if(arr[i]>max){
+            max=arr[i];
+        }
+    }
+    return max;
+}
+void count(int arr[],int n,int e){
+    int output[n];
+    int j,i;
+    int m=getmax(arr,n);
+    int c[m]={0};
+    for(i=0;i<n;i++){
+        c[(arr[i]/e)%10]++;
+    }
+    for(j=0;j<m;j++){
+        c[j]+=c[j-1];
+    }
+    for (i = n - 1; i >= 0; i--) {
+        output[c[(arr[i]/e) % 10]-1] = arr[i];
+        c[(arr[i]/e)%10]--;
+    }
+    for(i=0;i<n;i++){
+        arr[i]=output[i];
+    }
+    
+}
+void radixsort(int arr[],int n){
+    int i,m;
+    m=getmax(arr,n);
+    for(i=1;m/i>0;i=i*10){
+        count(arr,n,i);
+    }
+}
+void print(int arr[], int n)
+{
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+}
+
+int main()
+{
+    int arr[] = { 170,45,75,90,802,24,2,66};
+    int n = sizeof(arr) / sizeof(arr[0]);
+      radixsort(arr, n);
+    print(arr, n);
+    return 0;
+}
+
+
+//Implementation of Doubly LinkedList
+#include<bits/stdc++.h>
+using namespace std;
+
+class node{
+    public:
+        int data;
+        node *next;
+        node *prev;
+        node(int val){
+            data=val;
+            next=NULL;
+            prev=NULL;
+        }
+};
+
+void insertAtHead(node *&head, int val){
+    node *n=new node(val);
+    n->next=head;
+        if(head!=NULL)
+            head->prev=n;
+        head=n;
+}
+void insert(node *&head, int val){
+    node *n=new node(val);
+    node *temp=head;
+    if(head==NULL){
+        n->next=head;
+        if(head!=NULL)
+            head->prev=n;
+        head=n;
+        return;
+    }
+    while(temp->next!=NULL){
+        temp=temp->next;
+    }
+    temp->next=n;
+    n->prev=temp;
+}
+
+void display(node *head){
+    node *temp=head;
+    cout<<"NULL <-> ";
+    while(temp!=NULL){
+        cout<<temp->data<<" <-> ";
+        temp=temp->next;
+    }
+    cout<<"NULL"<<endl;
+}
+
+void deletion(node *&head, int pos){
+    node *temp=head;
+    int count=1;
+    if(pos==1){
+        head=head->next;
+        head->prev=NULL;
+        delete temp;
+        return;
+    }
+    while(temp!=NULL && count!=pos){
+        temp=temp->next;
+        count++;
+    }
+    temp->prev->next=temp->next;
+    if(temp->next!=NULL)
+    temp->next->prev=temp->prev;
+    delete temp;
+}
+
+int main(){
+    node *head=NULL;
+    insert(head,1);
+    insert(head,2);
+    insert(head,3);
+    insert(head,4);
+    insert(head,5);
+    insert(head,6);
+    insertAtHead(head,7);
+    display(head);
+    int pos;
+    cout<<"Enter the position of node you want to delete :";
+    cin>>pos;
+    deletion(head,pos);
+    display(head);
+    return 0;
+}
+
+// Copy List with Random Pointer
+
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+      // insert node betwwen each node  
+        if(head==NULL)
+            return NULL;
+        Node *curr=head;
+        Node *c=head;
+        Node *cu=head;
+        while(curr!=NULL){
+            Node *forw=curr->next;
+            Node *nn=new Node(curr->val);
+            curr->next=nn;
+            nn->next=forw;
+            curr=forw;
+        }
+        
+    //  set random pointors to each inserted node  
+        while(c!=NULL){
+            Node *ran=c->random;
+            if(ran!=NULL){
+            c->next->random=ran->next;
+            }
+            c=c->next->next;
+        }
+   // extract deep copy     
+        Node *dummy=new Node(-1);
+        Node *prev=dummy;
+        while(cu!=NULL){
+            prev->next=cu->next;
+            cu->next=cu->next->next;
+            prev=prev->next;
+            cu=cu->next;
+        }
+        
+        return dummy->next;
+    }
+};
+
+
+//Flatten a Multilevel Doubly Linked List
+
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* prev;
+    Node* next;
+    Node* child;
+};
+*/
+
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        if(head==NULL) return NULL;
+        
+        Node *cur=head;
+        while(cur!=NULL){
+            if(cur->child!=NULL){
+                Node *nex=cur->next;
+                cur->next=cur->child;
+                cur->next->prev=cur;
+                cur->child=NULL;
+                Node *tail=cur->next;
+                while(tail->next!=NULL){
+                    tail=tail->next;
+                }
+                tail->next=nex;
+                if(nex){
+                nex->prev=tail;
+                }
+            }
+            cur=cur->next;
+        }
+        return head;
+    }
+};
+
+// Add Two Numbers
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int m,n;
+    
+        ListNode *p,*q;
+        p=l1;
+        q=l2;
+        ListNode *ans=new ListNode(0);
+        ListNode *dummy=ans;
+        int carry=0;
+        while(p!=NULL && q!=NULL){
+            int sum=(p->val+q->val+carry);
+            carry=sum/10;
+            dummy->next=new ListNode(sum%10);
+            p=p->next;
+            q=q->next;
+            dummy=dummy->next;
+        }
+        while(p!=NULL){
+            int sum=(p->val+carry);
+            carry=sum/10;
+            dummy->next=new ListNode(sum%10);
+            p=p->next;
+            dummy=dummy->next;
+        }
+        while(q!=NULL){
+            int sum=q->val+carry;
+            carry=sum/10;
+            dummy->next=new ListNode(sum%10);
+            q=q->next;
+            dummy=dummy->next;
+        }
+        
+        if(carry!=0){
+            dummy->next=new ListNode(carry);
+        }
+        
+        return ans->next;
+        
+    }
+};
