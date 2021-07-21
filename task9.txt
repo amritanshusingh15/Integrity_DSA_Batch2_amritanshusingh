@@ -1,0 +1,503 @@
+// stock span problem
+
+class Solution
+{
+    public:
+    //Function to calculate the span of stockâ€™s price for all n days.
+    vector <int> calculateSpan(int price[], int n)
+    {
+       int i;
+       vector<int>res;
+       stack<pair<int,int>>s;
+       for(i=0;i<n;i++){
+           int d=1;
+           while(!s.empty() && s.top().first<=price[i]){
+               d+=s.top().second;
+               s.pop();
+           }
+           s.push({price[i],d});
+           res.push_back(d);
+       }
+       return res;
+    }
+};
+
+
+
+// { Driver Code Starts.
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		int n;
+		cin>>n;
+		int i,a[n];
+		for(i=0;i<n;i++)
+		{
+			cin>>a[i];
+		}
+		Solution obj;
+		vector <int> s = obj.calculateSpan(a, n);
+		
+		for(i=0;i<n;i++)
+		{
+			cout<<s[i]<<" ";
+		}
+		cout<<endl;
+	}
+	return 0;
+}
+  // } Driver Code Ends
+
+// Nearest Greater to left
+
+#include <iostream>
+#include<stack>
+#include<vector>
+using namespace std;
+
+vector<int> pge(vector<int>v){
+    int n=v.size(),i;
+    vector<int>ans;
+    stack<int>s;
+    ans.push_back(-1);
+    s.push(v[0]);
+    for(i=1;i<n;i++){
+        while(v[i]>s.top() && !s.empty()){
+            s.pop();
+        }
+        ans.push_back(s.top());
+        s.push(v[i]);
+    }
+    return ans;
+}
+void printv(vector<int>v){
+    int i;
+    for(i=0;i<v.size();i++){
+        cout<<v[i]<<" ";
+    }
+}
+int main()
+{
+    vector<int>v={24,11,13,21,3};
+    printv(pge(v));
+
+    return 0;
+}
+
+// Nearest smaller to left 
+
+#include <iostream>
+#include<stack>
+#include<vector>
+using namespace std;
+
+vector<int>pge(vector<int>v){
+    int n=v.size(),i;
+    vector<int>ans;
+    stack<int>s;
+    for(i=0;i<n;i++){
+        if(s.empty()){
+            ans.push_back(-1);
+            s.push(v[i]);
+        }else if(!s.empty()){
+            while(!s.empty() && v[i]<s.top()){
+                s.pop();
+            }
+            if(s.empty()){
+                ans.push_back(-1);
+            }else{
+                ans.push_back(s.top());
+            }
+             s.push(v[i]);
+        }
+       
+    }
+    return ans;
+}
+void printv(vector<int>v){
+    int i;
+    for(i=0;i<v.size();i++){
+        cout<<v[i]<<" ";
+    }
+}
+int main()
+{
+    vector<int>v={1,3,0,2,5};
+    printv(pge(v));
+    return 0;
+}
+
+// Nearest smaller to right
+#include <iostream>
+#include<stack>
+#include<vector>
+using namespace std;
+
+vector<int>pge(vector<int>v){
+    int n=v.size(),i;
+    vector<int>ans;
+    stack<int>s;
+    for(i=n-1;i>=0;i--){
+        if(s.empty()){
+            ans.push_back(-1);
+            s.push(v[i]);
+        }else if(!s.empty()){
+            while(!s.empty() && v[i]<s.top()){
+                s.pop();
+            }
+            if(s.empty()){
+                ans.push_back(-1);
+            }else{
+                ans.push_back(s.top());
+            }
+             s.push(v[i]);
+        }
+       
+    }
+    return ans;
+}
+void printv(vector<int>v){
+    int i;
+    for(i=v.size()-1;i>=0;i--){
+        cout<<v[i]<<" ";
+    }
+}
+int main()
+{
+    vector<int>v={4, 5, 2, 0};
+    printv(pge(v));
+    return 0;
+}
+
+// 
+
+class Solution {
+public:
+int trap(vector<int>& height) {
+        int n=height.size(),i,sum=0,ml,mr;
+        if(n==0){
+            return 0;
+        }
+        int l[n],r[n];
+        ml=l[0]=height[0];
+        mr=r[n-1]=height[n-1];
+        for(i=1;i<n;i++){
+            if(height[i]>ml){
+                ml=height[i];
+            }
+            l[i]=ml;
+        }
+        for(i=n-2;i>=0;i--){
+            if(height[i]>mr){
+                mr=height[i];
+            }
+            r[i]=mr;
+        }
+        for(i=0;i<n;i++){
+            sum=sum+min(l[i],r[i])-height[i];
+        }
+        return sum;
+    }
+};
+
+// Largest Rectangle in Histogram
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        int n=heights.size();
+        int i,ans=0;
+        stack<int>s;
+       heights.push_back(0);
+        for(i=0;i<n;i++){
+            while(!s.empty() && heights[s.top()]>heights[i]){
+                int top=heights[s.top()];
+                s.pop();
+                int w=s.empty()?-1:s.top();
+                ans=max(ans,top*(i-w-1));
+                
+            }
+            s.push(i);
+        }
+        return ans;
+    }
+};
+
+
+// max area of rectangle in binary matrix
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {int n=0;
+        int m=matrix.size();
+        if(m!=0)
+         n=matrix[0].size();
+        int res=0;
+        if(m==0) return 0;
+        vector<int> v(n,0);
+        for(int i=0;i<m;++i){
+           for(int j=0;j<n;++j){ 
+               if(matrix[i][j]=='0') v[j]=0;
+               else{
+                   v[j]+= (matrix[i][j]-'0');
+                   }
+           }
+              int tmp=maxInRow(v,n);
+               res=max(res,tmp);
+            
+        }
+        return res;
+    }
+    int maxInRow(vector<int> v,int n){
+     
+        int res=0;
+        v.push_back(0);
+        stack<int> st;
+        
+        int i=0;
+        while(i<n+1){
+            if(st.empty()|| v[i]>= v[st.top()]) st.push(i++);
+            else{
+                int index=st.top();
+                st.pop();
+                if(st.empty()) res=max(res, i*v[index]);
+                else{
+                    res=max(res,v[index]*(i-st.top()-1));
+                }                
+            }     
+        } 
+       return res;     
+    }
+};
+
+// Longest valid parentesis
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int n=s.size(), open=0, close=0, ans=0;
+        for(int i=0;i<n;i++){
+            if(s[i]=='(') open++;
+            else close++;
+            if(open==close) ans=max(ans, open+close);
+            if(close>open) close=open=0;
+        }
+        open=close=0;
+        for(int i=n-1;i>=0;i--){
+            if(s[i]=='(') open++;
+            else close++;
+            if(open==close) ans=max(ans, open+close);
+            if(close<open) close=open=0;
+        }
+        return ans;
+    }
+};
+
+// minimum number of deletion required to balance the parantesis
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        
+        int close = count(s.begin(), s.end(), ')');
+        
+        int open = 0;
+        
+        string ans;
+        
+        for (const auto & c : s)
+        {
+            if (c == '(')
+            {
+                if (open == close) continue;
+                ++open;
+            }
+            else if (c == ')')
+            {
+                --close;
+                if (open == 0) continue;
+                --open;
+            }
+            ans += c;
+        }
+        
+        return ans;
+    }
+};
+
+// Stack using queue
+
+class MyStack {
+public:
+    queue<int> q;
+    int topValue;
+    /** Initialize your data structure here. */
+    MyStack() {
+        
+    }
+    
+    /** Push element x onto stack. */
+	//update the top value everytime you push
+    void push(int x) {
+        topValue = x;
+        q.push(x);
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        queue<int> tempQ;
+        if(q.empty()) return -1;
+        int tempTopValue = -1;
+		//pop except the last one
+        while(q.size() > 1)
+        {
+            topValue = q.front();
+            tempQ.push(q.front());
+            q.pop();
+        }
+		//store the last one
+        if(q.size() == 1)
+            tempTopValue = q.front();
+		//discard the old queue
+		//top value is whatever the last value in the queue is
+        q = tempQ;
+        return tempTopValue;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        return topValue;
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q.empty();
+    }
+};
+
+// queue using stack
+class MyQueue {
+public:
+    void push(int x) {
+        while(!stk.empty())
+            aux.push_back(stk.back()),stk.pop_back();
+        stk.push_back(x);
+        while(!aux.empty())
+            stk.push_back(aux.back()),aux.pop_back();
+    }
+    int pop() {
+        int res=stk.back(); stk.pop_back();
+        return res;
+    }
+    int peek() { return stk.back(); }
+    bool empty() { return stk.empty(); }
+private:
+    vector<int> stk,aux;
+};
+
+// Implement two stacks in one array
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+using namespace std;
+ 
+class Stack
+{
+    int *arr;
+    int capacity;
+    int top1, top2;
+ 
+public:
+ 
+    // Constructor
+    Stack(int n)
+    {
+        capacity = n;
+        arr = new int[n];
+        top1 = -1;
+        top2 = n;
+    }
+ 
+    // Function to insert a given element into the first stack
+    void push1(int key)
+    {
+        // check if the array is full
+        if (top1 + 1 == top2)
+        {
+            cout << "Stack Overflow";
+            exit(EXIT_FAILURE);
+        }
+ 
+        top1++;
+        arr[top1] = key;
+    }
+ 
+    // Function to insert a given element into the second stack
+    void push2(int key)
+    {
+        // check if the array is full
+        if (top1 + 1 == top2)
+        {
+            cout << "Stack Overflow";
+            exit(EXIT_FAILURE);
+        }
+ 
+        top2--;
+        arr[top2] = key;
+    }
+ 
+    // Function to pop an element from the first stack
+    int pop1()
+    {
+        // if no elements are left in the array
+        if (top1 < 0)
+        {
+            cout << "Stack Underflow";
+            exit(EXIT_FAILURE);
+        }
+ 
+        int top = arr[top1];
+        top1--;
+        return top;
+    }
+ 
+    // Function to pop an element from the second stack
+    int pop2()
+    {
+        // if no elements are left in the array
+        if (top2 >= capacity)
+        {
+            cout << "Stack Underflow";
+            exit(EXIT_FAILURE);
+        }
+ 
+        int top = arr[top2];
+        top2++;
+        return top;
+    }
+};
+ 
+int main()
+{
+    vector<int> arr1 = { 1, 2, 3, 4, 5 };
+    vector<int> arr2 = { 6, 7, 8, 9, 10 };
+ 
+    Stack stack(arr1.size() + arr2.size());
+ 
+    for (int i: arr1) {
+        stack.push1(i);
+    }
+ 
+    for (int j: arr2) {
+        stack.push2(j);
+    }
+ 
+    cout << "Popping element from the first stack: "
+         << stack.pop1() << endl;
+ 
+    cout << "Popping element from the second stack: "
+         << stack.pop2() << endl;
+ 
+    return 0;
+}
