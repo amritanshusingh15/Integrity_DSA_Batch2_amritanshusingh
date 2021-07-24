@@ -1,0 +1,394 @@
+// Left view of a Tree
+
+/* A binary tree node
+
+struct Node
+{
+    int data;
+    struct Node* left;
+    struct Node* right;
+    
+    Node(int x){
+        data = x;
+        left = right = NULL;
+    }
+};
+ */
+vector<int>leftView(Node *root)
+{
+   vector<int>res;
+        queue<Node*>q;
+        if(root==NULL)
+            return {};
+        q.push(root);
+        while(!q.empty()){
+            int c=q.size();
+            for(int i=0;i<c;i++){
+                Node *t=q.front();
+                q.pop();
+                if(i==0){
+                    res.push_back(t->data);
+                }
+                if(t->left){
+                    q.push(t->left);
+                }
+                if(t->right){
+                    q.push(t->right);
+                }
+            }
+        }
+        return res;
+   
+}
+
+// Right view of a Tree
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    
+    vector<int> rightSideView(TreeNode* root) {
+        
+        vector<int>res;
+        queue<TreeNode*>q;
+        if(root==NULL)
+            return {};
+        q.push(root);
+        while(!q.empty()){
+            int c=q.size();
+            for(int i=0;i<c;i++){
+                TreeNode *t=q.front();
+                q.pop();
+                if(i==c-1){
+                    res.push_back(t->val);
+                }
+                if(t->left){
+                    q.push(t->left);
+                }
+                if(t->right){
+                    q.push(t->right);
+                }
+            }
+        }
+        return res;
+        }
+};
+
+// Top view of a Tree
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    Node* left;
+    Node* right;
+    int hd;
+    int data;
+};
+
+Node* newNode(int key)
+{
+    Node* node = new Node();
+    node->left = node->right = NULL;
+    node->data = key;
+    return node;
+}
+
+void topview(Node* root)
+{
+    if (root == NULL)
+        return;
+    queue<Node*> q;
+    map<int, int> m;
+    int hd = 0;
+    root->hd = hd;
+    q.push(root);
+ 
+    cout << "The top view of the tree is : \n";
+ 
+    while (q.size()) {
+        hd = root->hd;
+ 
+        if (m.count(hd) == 0)
+            m[hd] = root->data;
+        if (root->left) {
+            root->left->hd = hd - 1;
+            q.push(root->left);
+        }
+        if (root->right) {
+            root->right->hd = hd + 1;
+            q.push(root->right);
+        }
+        q.pop();
+        root = q.front();
+    }
+ 
+    for (auto i = m.begin(); i != m.end(); i++) {
+        cout << i->second << " ";
+    }
+}
+
+// Bottom view of a Tree
+
+#include<bits/stdc++.h>
+using namespace std;
+ 
+// Tree node class
+struct Node
+{
+    int data; //data of the node
+    int hd; //horizontal distance of the node
+    Node *left, *right; //left and right references
+ 
+    // Constructor of tree node
+    Node(int key)
+    {
+        data = key;
+        hd = INT_MAX;
+        left = right = NULL;
+    }
+};
+ 
+// Method that prints the bottom view.
+void bottomView(Node *root)
+{
+    if (root == NULL)
+        return;
+    int hd = 0;
+    map<int, int> m;
+    queue<Node *> q;
+    root->hd = hd;
+    q.push(root); 
+ 
+    while (!q.empty())
+    {
+        Node *temp = q.front();
+        q.pop();
+ 
+        hd = temp->hd;
+ 
+        m[hd] = temp->data;
+ 
+        if (temp->left != NULL)
+        {
+            temp->left->hd = hd-1;
+            q.push(temp->left);
+        }
+ 
+        if (temp->right != NULL)
+        {
+            temp->right->hd = hd+1;
+            q.push(temp->right);
+        }
+    }
+ 
+    for (auto i = m.begin(); i != m.end(); ++i)
+        cout << i->second << " ";
+}
+
+// Boundary traversal of a Tree
+
+#include <stdio.h>
+#include <stdlib.h>
+ 
+struct node {
+    int data;
+    struct node *left, *right;
+};
+ 
+void printLeaves(struct node* root)
+{
+    if (root == NULL)
+        return;
+ 
+    printLeaves(root->left);
+ 
+    if (!(root->left) && !(root->right))
+        printf("%d ", root->data);
+ 
+    printLeaves(root->right);
+}
+ 
+
+void printBoundaryLeft(struct node* root)
+{
+    if (root == NULL)
+        return;
+ 
+    if (root->left) {
+ 
+        
+        printf("%d ", root->data);
+        printBoundaryLeft(root->left);
+    }
+    else if (root->right) {
+        printf("%d ", root->data);
+        printBoundaryLeft(root->right);
+    }
+   
+}
+
+void printBoundaryRight(struct node* root)
+{
+    if (root == NULL)
+        return;
+ 
+    if (root->right) {
+      
+        printBoundaryRight(root->right);
+        printf("%d ", root->data);
+    }
+    else if (root->left) {
+        printBoundaryRight(root->left);
+        printf("%d ", root->data);
+    }
+    // do nothing if it is a leaf node, this way we avoid
+    // duplicates in output
+}
+
+void printBoundary(struct node* root)
+{
+    if (root == NULL)
+        return;
+ 
+    printf("%d ", root->data);
+ 
+    printBoundaryLeft(root->left);
+ 
+    printLeaves(root->left);
+    printLeaves(root->right);
+ 
+    printBoundaryRight(root->right);
+}
+ 
+struct node* newNode(int data)
+{
+    struct node* temp = (struct node*)malloc(sizeof(struct node));
+ 
+    temp->data = data;
+    temp->left = temp->right = NULL;
+ 
+    return temp;
+}
+
+
+include <bits/stdc++.h>
+using namespace std;
+  
+
+struct Node {
+    int data;
+    Node *left, *right;
+};
+  
+Node* newNode(int data)
+{
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return (node);
+}
+
+void diagonalPrint(Node* root)
+{
+
+    if (root == NULL)
+        return;
+ 
+    queue<Node*> q;
+
+    q.push(root);
+  
+    q.push(NULL);
+  
+    while (!q.empty()) {
+        Node* temp = q.front();
+        q.pop();
+  
+        if (temp == NULL) {
+  
+            if (q.empty())
+                return;
+  
+            cout << endl;
+            q.push(NULL);
+        }
+        else {
+            while (temp) {
+                cout << temp->data << " ";
+  
+                if (temp->left)
+                    q.push(temp->left);
+  
+                temp = temp->right;
+            }
+        }
+    }
+}
+
+// Convert binary tree to doubly linked list
+
+#include <iostream>
+using namespace std;
+
+struct node
+{
+    int data;
+    node* left;
+    node* right;
+};
+ 
+void BinaryTree2DoubleLinkedList(node *root, node **head)
+{
+    // Base case
+    if (root == NULL) return;
+ 
+    static node* prev = NULL;
+ 
+    BinaryTree2DoubleLinkedList(root->left, head);
+
+    if (prev == NULL)
+        *head = root;
+    else
+    {
+        root->left = prev;
+        prev->right = root;
+    }
+    prev = root;
+ 
+    BinaryTree2DoubleLinkedList(root->right, head);
+}
+
+
+// check if root to leaf path exists for a given sum it will return true and false
+
+class Solution {
+public:
+    int target;
+    bool has_path(TreeNode* root,int sum) {
+        if (root->left==NULL && root->right==NULL) return (sum+root->val==target);
+        if (root->left==NULL && root->right!=NULL) 
+            return has_path(root->right,sum+root->val);
+        if (root->right==NULL && root->left!=NULL) 
+            return has_path(root->left,sum+root->val);
+        return has_path(root->left,sum+root->val)
+            || has_path(root->right,sum+root->val);
+    }
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root==NULL) return false;
+        target = targetSum;
+        return has_path(root,0);
+    }
+};
+ 
